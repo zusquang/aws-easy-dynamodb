@@ -19,7 +19,7 @@ var easyDynamoDb = new EasyDynamoDB(/* Configuration */);
 easyDynamoDb.createTable(/* Parameters */);
 ```
 
-### Promises and Callbacks
+### Promises _and_ Callbacks
 With easy-dynamodb, you can freely use promises or callbacks wherever makes the most sense to you. Every function supports both with no added effort on your part. Simply provide a callback if you would like to use one, otherwise the function will return a promise you can use to run your next instruction.
 
 If you like promises:
@@ -43,7 +43,38 @@ easyDynamoDb.createTable(/* Parameters */, function (err, data) {
 	}
 });
 ```
+### Simplified Key Objects
+When running operations on items in your database (e.g. `PutItem`, `GetItem`, etc.), the AWS SDK expects _AttributeValues_ to describe your keys:
+```javascript
+{
+	Item: {
+		/* String hash key */
+		'HashKeyName' : {
+			S: 'HashKeyValue'
+		},
+		
+		/* Numerical range key */
+		'RangeKeyName' : {
+			N: '5'
+		}
+	}
+	/* ... */
+}
+```
+This can lead to cumbersome and error-prone parameter objects. With easy-dynamodb, you just use regular objects for your keys:
 
+```javascript
+{
+	Item: {
+		/* String hash key */
+		'HashKeyName' : 'HashKeyValue'
+		
+		/* Numerical range key */
+		'RangeKeyName' : 5
+	}
+	/* ... */
+}
+```
 ### The Future
 It is still in its early phases, but here is at least part of my wish-list for easy-dynamodb.
 
@@ -70,5 +101,20 @@ mocha
 ```
 
 ## Changelog
+### 0.0.2 - July 25 - 2015
+Features:
+
+ - PutItem, GetItem, UpdateItem and DeleteItem no longer require AttributeValues to be specified for their keys parameters. They now get marshalled to the correct format automatically.
+
+Bug fixes:
+
+ - Rename `listTable` to `listTables` and call correct underlying function
+ - waitFor now calls correct underlying function
+ - Fix context binding when calling underlying SDK to prevent "undefined is not a function" errors
+
 ### 0.0.1 - July 24, 2015
-Initial release. All DynamoDB functionality from the AWS SDK can be used with callbacks or with promises.
+Initial release. 
+
+Features:
+
+ - All DynamoDB functionality from the AWS SDK can be used with callbacks or with promises.
