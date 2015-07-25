@@ -2,7 +2,8 @@
 
 As its name implies, easy-dynamodb is a package meant to make working with DynamoDB easier and more productive - less time spent reading heavy API documentation, less lines of code, and less mistakes.
 
-Everything the [AWS DynamoDB SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html) can do, easy-dynamodb can do -- only more easily.
+Everything the [AWS DynamoDB SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html) can do, easy-dynamodb can do -- only (hopefully) more easily.
+For information on parameters that must be passed into the functions and constructor, please refer to the AWS API docs.
 
 ### Getting Started
 In order to use easy-dynamodb, you first need to add it as a dependency of your Node project
@@ -47,8 +48,8 @@ easyDynamoDb.createTable(/* Parameters */, function (err, data) {
 It is still in its early phases, but here is at least part of my wish-list for easy-dynamodb.
 
 * Allow the user to use promises or callbacks seamlessly, depending on their situation [Done!]
-* Remove the need to specify AttributeTypes or to marshal/unmarshal data being passed to and from DynamoDB
-* Transparently treat cases where multiples call must be made to DynamoDB, such as with `deleteGetItem`'s max item count of 1000.
+* Remove the need to specify AttributeValues or to marshal/unmarshal data being passed to and from DynamoDB
+* Transparently treat cases where multiple calls must be made to DynamoDB, such as with `deleteGetItem`'s max item count of 1000.
 * Replace "batch" functions and make the regular function smart enough to act appropriately
 
 ### Running Tests
