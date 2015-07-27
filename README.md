@@ -83,8 +83,8 @@ It is still in its early phases, but here is at least part of my wish-list for e
 * Transparently treat cases where multiple calls must be made to DynamoDB, such as with `deleteGetItem`'s max item count of 1000.
 * Replace "batch" functions and make the regular function smart enough to act appropriately
 
-### Running Tests
-If for some reason you would like to run the easy-dynamodb tests, check out the project and run npm install to get all the required dependencies. Then, create a file called `automation.config` under the `test` folder containing the configuration parameters you would normally pass to the EasyDynamoDB object. A basic example would be:
+### Integration Tests
+If for some reason you would like to run the easy-dynamodb integration tests, check out the project and run npm install to get all the required dependencies. Then, create a file called `automation.config` under the `test` folder containing the configuration parameters you would normally pass to the EasyDynamoDB object. A basic example would be:
 
 ```json
 {
@@ -109,7 +109,7 @@ Features:
 Bug fixes:
 
  - Rename `listTable` to `listTables` and call correct underlying function
- - waitFor now calls correct underlying function
+ - `waitFor` now calls correct underlying function
  - Fix context binding when calling underlying SDK to prevent "undefined is not a function" errors
 
 ### 0.0.1 - July 24, 2015

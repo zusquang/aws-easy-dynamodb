@@ -9,7 +9,7 @@ describe('EasyDynamoDB', function() {
     var TABLE_NAME = 'TestTable';
     var TABLE_HASH_KEY = 'TestTableHashKey';
 
-    var dynamoDb = new EasyDynamoDB(JSON.parse(fs.readFileSync('test/automation.config', 'utf8')));
+    var dynamoDb = new EasyDynamoDB(JSON.parse(fs.readFileSync('test/integration/automation.config', 'utf8')));
 
     beforeEach(function () {
         return dynamoDb.createTable({

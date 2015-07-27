@@ -1,6 +1,7 @@
 var AWS = require('aws-sdk');
 var Q = require('q');
 var marshaler = require('dynamodb-marshaler');
+var _ = require('lodash');
 
 function EasyDynamoDB(options) {
     this._dynamodb = new AWS.DynamoDB(options);
@@ -14,7 +15,7 @@ function EasyDynamoDB(options) {
  * @returns {*|promise}
  */
 function run(func, callback) {
-    if (typeof callback === 'function') {
+    if (_.isFunction(callback)) {
         func(callback);
     } else {
         var deferred = Q.defer();
@@ -28,6 +29,21 @@ function run(func, callback) {
         });
 
         return deferred.promise;
+    }
+}
+
+/**
+ * Fails with the given error.
+ * If a callback is provided, run it. Otherwise return a rejected promise.
+ * @param e
+ * @param callback
+ * @returns {*}
+ */
+function error(e, callback) {
+    if(_.isFunction(callback)) {
+        callback(e);
+    } else {
+        return Q.reject(e);
     }
 }
 
@@ -53,6 +69,10 @@ EasyDynamoDB.prototype.createTable = function(params, callback) {
 
 EasyDynamoDB.prototype.deleteItem = function(params, callback) {
 
+    if (_.isUndefined(params.Key)) {
+        return error(new Error('Parameters must contain a "Key" object'), callback);
+    }
+
     params.Key = toDynamoDbFormat(params.Key);
 
     return run(this._dynamodb.deleteItem.bind(this._dynamodb, params), callback);
@@ -68,6 +88,10 @@ EasyDynamoDB.prototype.describeTable = function(params, callback) {
 
 EasyDynamoDB.prototype.getItem = function(params, callback) {
 
+    if (_.isUndefined(params.Key)) {
+        return error(new Error('Parameters must contain a "Key" object'), callback);
+    }
+
     params.Key = toDynamoDbFormat(params.Key);
 
     return run(this._dynamodb.getItem.bind(this._dynamodb, params), callback);
@@ -78,6 +102,10 @@ EasyDynamoDB.prototype.listTables = function(params, callback) {
 };
 
 EasyDynamoDB.prototype.putItem = function(params, callback) {
+
+    if (_.isUndefined(params.Item)) {
+        return error(new Error('Parameters must contain an "Item" object'), callback);
+    }
 
     params.Item = toDynamoDbFormat(params.Item);
 
@@ -93,6 +121,10 @@ EasyDynamoDB.prototype.scan = function(params, callback) {
 };
 
 EasyDynamoDB.prototype.updateItem = function(params, callback) {
+
+    if (_.isUndefined(params.Key)) {
+        return error(new Error('Parameters must contain a "Key" object'), callback);
+    }
 
     params.Key = toDynamoDbFormat(params.Key);
 
