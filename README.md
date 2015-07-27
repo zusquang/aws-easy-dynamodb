@@ -101,7 +101,11 @@ mocha
 ```
 
 ## Changelog
-### 0.0.2 - July 25 - 2015
+### 0.0.3 - xxx x, 2015
+Misc:
+ - PutItem, GetItem, UpdateItem and DeleteItem now throw Errors if you call them without the bare minimum Key or Item object as part of your params
+
+### 0.0.2 - July 25, 2015
 Features:
 
  - PutItem, GetItem, UpdateItem and DeleteItem no longer require AttributeValues to be specified for their keys parameters. They now get marshalled to the correct format automatically.

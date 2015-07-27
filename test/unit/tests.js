@@ -1,9 +1,11 @@
 var AWS = require('aws-sdk');
 var chai = require('chai');
 var sinon = require('sinon');
+var sinonChai = require("sinon-chai");
 var Q = require('q');
 
 chai.should();
+chai.use(sinonChai);
 
 var EasyDynamoDB = require('./../../index.js');
 
@@ -85,19 +87,24 @@ describe('EasyDynamoDB', function () {
 
     describe('deleteItem', function () {
 
-        var deleteParams = {
-            Key: {
-                S: 'key'
-        }};
+        var deleteParams;
+
+        var deleteItemStub;
 
         beforeEach(function () {
-            sinon.stub(awsDynamoDb, 'deleteItem', function (params, callback) {
+            deleteParams = {
+                Key : {
+                    'HashKey': 'key'
+                }
+            };
+
+            deleteItemStub = sinon.stub(awsDynamoDb, 'deleteItem', function (params, callback) {
                 callback(null, {}); // Just make it not an error
             });
         });
 
         afterEach(function () {
-            awsDynamoDb.deleteItem.restore();
+            deleteItemStub.restore();
         });
 
         it('should allow the use of promises', function () {
@@ -120,13 +127,26 @@ describe('EasyDynamoDB', function () {
         });
 
         it('should fail callback if provided parameters does not contain Key section', function (done) {
-            return easyDynamoDb.deleteItem({}, function (err) {
+            easyDynamoDb.deleteItem({}, function (err) {
                 if (err) {
                     done();
                 } else {
                     throw new Error('Should have failed without a Key');
                 }
             })
+        });
+
+        it('should marshal Key section to DynamoDB format', function () {
+            var promise = easyDynamoDb.deleteItem(deleteParams);
+
+            deleteItemStub.should.have.been.calledWith({
+                Key: {
+                    'HashKey': {
+                        S: 'key'
+                    }
+                }});
+
+            return promise;
         });
     });
 
@@ -178,19 +198,23 @@ describe('EasyDynamoDB', function () {
 
     describe('getItem', function () {
 
-        var getParams = {
-            Key: {
-                S: 'key'
-        }};
+        var getParams;
+
+        var getItemStub;
 
         beforeEach(function () {
-            sinon.stub(awsDynamoDb, 'getItem', function (params, callback) {
+            getParams = {
+                Key: {
+                    'HashKey': 'key'
+            }};
+
+            getItemStub = sinon.stub(awsDynamoDb, 'getItem', function (params, callback) {
                 callback(null, {}); // Just make it not an error
             });
         });
 
         afterEach(function () {
-            awsDynamoDb.getItem.restore();
+            getItemStub.restore();
         });
 
         it('should allow the use of promises', function () {
@@ -213,13 +237,26 @@ describe('EasyDynamoDB', function () {
         });
 
         it('should fail callback if provided parameters does not contain Key section', function (done) {
-            return easyDynamoDb.getItem({}, function (err) {
+            easyDynamoDb.getItem({}, function (err) {
                 if (err) {
                     done();
                 } else {
                     throw new Error('Should have failed without a Key');
                 }
             })
+        });
+
+        it('should marshal Key section to DynamoDB format', function () {
+            var promise = easyDynamoDb.getItem(getParams);
+
+            getItemStub.should.have.been.calledWith({
+                Key: {
+                    'HashKey': {
+                        S: 'key'
+                    }
+                }});
+
+            return promise;
         });
     });
 
@@ -248,19 +285,23 @@ describe('EasyDynamoDB', function () {
 
     describe('putItem', function () {
 
-        var putParams = {
-            Item: {
-                S: 'key'
-        }};
+        var putParams;
+
+        var putItemStub;
 
         beforeEach(function () {
-            sinon.stub(awsDynamoDb, 'putItem', function (params, callback) {
+            putParams = {
+                Item: {
+                    'HashKey': 'key'
+            }};
+
+            putItemStub = sinon.stub(awsDynamoDb, 'putItem', function (params, callback) {
                 callback(null, {}); // Just make it not an error
             });
         });
 
         afterEach(function () {
-            awsDynamoDb.putItem.restore();
+            putItemStub.restore();
         });
 
         it('should allow the use of promises', function () {
@@ -283,13 +324,26 @@ describe('EasyDynamoDB', function () {
         });
 
         it('should fail callback if provided parameters does not contain Item section', function (done) {
-            return easyDynamoDb.putItem({}, function (err) {
+            easyDynamoDb.putItem({}, function (err) {
                 if (err) {
                     done();
                 } else {
                     throw new Error('Should have failed without an Item');
                 }
             })
+        });
+
+        it('should marshal Key section to DynamoDB format', function () {
+            var promise = easyDynamoDb.putItem(putParams);
+
+            putItemStub.should.have.been.calledWith({
+                Item: {
+                    'HashKey': {
+                        S: 'key'
+                    }
+                }});
+
+            return promise;
         });
     });
 
@@ -341,19 +395,23 @@ describe('EasyDynamoDB', function () {
 
     describe('updateItem', function () {
 
-        var updateParams = {
-            Key: {
-                S: 'key'
-            }};
+        var updateParams;
+
+        var updateItemStub;
 
         beforeEach(function () {
-            sinon.stub(awsDynamoDb, 'updateItem', function (params, callback) {
+            updateParams = {
+                Key : {
+                    'HashKey': 'key'
+            }};
+
+            updateItemStub = sinon.stub(awsDynamoDb, 'updateItem', function (params, callback) {
                 callback(null, {}); // Just make it not an error
             });
         });
 
         afterEach(function () {
-            awsDynamoDb.updateItem.restore();
+            updateItemStub.restore();
         });
 
         it('should allow the use of promises', function () {
@@ -376,13 +434,26 @@ describe('EasyDynamoDB', function () {
         });
 
         it('should fail callback if provided parameters does not contain Key section', function (done) {
-            return easyDynamoDb.updateItem({}, function (err) {
+            easyDynamoDb.updateItem({}, function (err) {
                 if (err) {
                     done();
                 } else {
                     throw new Error('Should have failed without a Key');
                 }
             })
+        });
+
+        it('should marshal Key section to DynamoDB format', function () {
+            var promise = easyDynamoDb.updateItem(updateParams);
+
+            updateItemStub.should.have.been.calledWith({
+                Key: {
+                    'HashKey': {
+                        S: 'key'
+                    }
+            }});
+
+            return promise;
         });
     });
 
