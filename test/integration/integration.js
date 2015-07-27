@@ -3,7 +3,7 @@ var fs = require('fs');
 var chai = require('chai');
 chai.should();
 
-var EasyDynamoDB = require('./../index.js');
+var EasyDynamoDB = require('./../../index.js');
 
 describe('EasyDynamoDB', function() {
     var TABLE_NAME = 'TestTable';
@@ -70,10 +70,10 @@ describe('EasyDynamoDB', function() {
 
         // Run test
         return dynamoDb.putItem(putItemParams)
-        .then(function () {
+        .then(function (data) {
             return dynamoDb.getItem(getItemParams);
         })
-        .then(function () {
+        .then(function (data) {
             return dynamoDb.updateItem(updateItemParams);
         })
         .then(function () {
