@@ -148,6 +148,28 @@ describe('EasyDynamoDB', function () {
 
             return promise;
         });
+
+        it('should un-marshal Attributes in response from DynamoDB', function () {
+            // Overwrite stub
+            deleteItemStub.restore();
+            deleteItemStub = sinon.stub(awsDynamoDb, 'deleteItem', function (params, callback) {
+                callback(null, {
+                    Attributes: {
+                        HashKey: {
+                            S: 'key'
+                        }
+                    }});
+            });
+
+            return easyDynamoDb.deleteItem(deleteParams)
+            .then(function(data) {
+                data.should.be.deep.equal({
+                    Attributes: {
+                        HashKey: 'key'
+                    }
+                });
+            });
+        });
     });
 
     describe('deleteTable', function () {
@@ -258,6 +280,28 @@ describe('EasyDynamoDB', function () {
 
             return promise;
         });
+
+        it('should un-marshal Item in response from DynamoDB', function () {
+            // Overwrite stub
+            getItemStub.restore();
+            getItemStub = sinon.stub(awsDynamoDb, 'getItem', function (params, callback) {
+                callback(null, {
+                    Item: {
+                        HashKey: {
+                            S: 'key'
+                        }
+                    }});
+            });
+
+            return easyDynamoDb.getItem(getParams)
+            .then(function(data) {
+                data.should.be.deep.equal({
+                    Item: {
+                        HashKey: 'key'
+                    }
+                });
+            });
+        });
     });
 
     describe('listTables', function () {
@@ -344,6 +388,28 @@ describe('EasyDynamoDB', function () {
                 }});
 
             return promise;
+        });
+
+        it('should un-marshal Attributes in response from DynamoDB', function () {
+            // Overwrite stub
+            putItemStub.restore();
+            putItemStub = sinon.stub(awsDynamoDb, 'putItem', function (params, callback) {
+                callback(null, {
+                    Attributes: {
+                        HashKey: {
+                            S: 'key'
+                        }
+                    }});
+            });
+
+            return easyDynamoDb.putItem(putParams)
+            .then(function(data) {
+                data.should.be.deep.equal({
+                    Attributes: {
+                        HashKey: 'key'
+                    }
+                });
+            });
         });
     });
 
@@ -454,6 +520,28 @@ describe('EasyDynamoDB', function () {
             }});
 
             return promise;
+        });
+
+        it('should un-marshal Attributes in response from DynamoDB', function () {
+            // Overwrite stub
+            updateItemStub.restore();
+            updateItemStub = sinon.stub(awsDynamoDb, 'updateItem', function (params, callback) {
+                callback(null, {
+                    Attributes: {
+                        HashKey: {
+                            S: 'key'
+                        }
+                    }});
+            });
+
+            return easyDynamoDb.updateItem(updateParams)
+                .then(function(data) {
+                    data.should.be.deep.equal({
+                        Attributes: {
+                            HashKey: 'key'
+                        }
+                    });
+                });
         });
     });
 

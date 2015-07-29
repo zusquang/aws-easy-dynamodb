@@ -101,7 +101,10 @@ mocha
 ```
 
 ## Changelog
-### 0.0.3 - xxx x, 2015
+### 0.0.3 - Not Released Yet
+Features:
+ - PutItem, GetItem, UpdateItem and DeleteItem no longer return AttributeValues as part of their main response element ("Attributes"/"Item"). They now get un-marshalled back to a regular JS object.
+
 Misc:
  - PutItem, GetItem, UpdateItem and DeleteItem now throw Errors if you call them without the bare minimum Key or Item object as part of your params
 
