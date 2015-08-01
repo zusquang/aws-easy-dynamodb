@@ -11,9 +11,10 @@ var EasyDynamoDB = require('./../../index.js');
 
 describe('EasyDynamoDB', function () {
 
-    var awsDynamoDb = new AWS.DynamoDB();
-
     var easyDynamoDb = new EasyDynamoDB();
+
+    // Fake out the AWS DynamoDB we are using
+    var awsDynamoDb = new AWS.DynamoDB();
     easyDynamoDb._dynamodb = awsDynamoDb;
 
     describe('batchGetItem', function () {
