@@ -94,6 +94,7 @@ Similarly, the response back from DynamoDB will be automatically un-marshalled b
 
 ### <a id="UsefulConstants"></a>Useful Constants
 Easy-dynamodb provides constants for many of the strings AWS SDK expects to help you maintain cleaner code and better programming habits.
+
 ##### <a id="EasyDynamoDB.AttributeTypes"></a> EasyDynamoDB.AttributeTypes
  - STRING
  - NUMBER
@@ -105,17 +106,18 @@ easyDynamoDb.createTable(
 	AttributeDefinitions:
 	[
 		{
-			AttributeName: TABLE_HASH_KEY,
+			AttributeName: 'myHashKey',
 			AttributeType: EasyDynamoDB.AttributeTypes.STRING
 		},
 		{
-			AttributeName: TABLE_RANGE_KEY,
+			AttributeName: 'myRangeKey',
 			AttributeType: EasyDynamoDB.AttributeTypes.NUMBER
 		}
 	]
 	// Other parameters...
 }
 ```
+
 ##### <a id="EasyDynamoDB.KeyTypes"></a> EasyDynamoDB.KeyTypes
  - HASH
  - RANGE
@@ -137,6 +139,7 @@ easyDynamoDb.createTable(
       // Other parameters...
 }
  ```
+ 
 ##### <a id="EasyDynamoDB.ReturnValues"></a> EasyDynamoDB.ReturnValues
  - NONE
  - ALL_OLD
@@ -151,6 +154,7 @@ easyDynamoDb.getItem(
 	// Other parameters...
 });
 ```
+
 ##### <a id="EasyDynamoDB.WaitForStates"></a>  EasyDynamoDB.WaitForStates
  - TABLE_EXISTS
  - TABLE_NOT_EXISTS
@@ -163,6 +167,7 @@ easyDynamoDb.waitFor(
 	}
 );
 ```
+
 ### <a id="TheFuture"></a>  The Future
 It is still in its early phases, but here is at least part of my wish-list for easy-dynamodb.
 
@@ -170,6 +175,7 @@ It is still in its early phases, but here is at least part of my wish-list for e
 * Remove the need to specify AttributeValues or to marshal/unmarshal data being passed to and from DynamoDB
 * Transparently treat cases where multiple calls must be made to DynamoDB, such as with `deleteGetItem`'s max item count of 1000.
 * Replace "batch" functions and make the regular function smart enough to act appropriately
+* Provide constants for all AWS SDK strings
 
 ### <a id="IntegrationTests"></a> Integration Tests
 If for some reason you would like to run the easy-dynamodb integration tests, check out the project and run npm install to get all the required dependencies. Then, create a file called `automation.config` under the `test` folder containing the configuration parameters you would normally pass to the EasyDynamoDB object. A basic example would be:
