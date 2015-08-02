@@ -7,40 +7,78 @@ describe('EasyDynamoDB', function() {
     var TABLE_HASH_KEY = 'TestTableHashKey';
     var TABLE_RANGE_KEY = 'TestTableRangeKey';
 
+    var TABLE_FIELD_1 = 'TestTableField1';
+    var TABLE_FIELD_2 = 'TestTableField2';
+
+    var INDEX_NAME = 'TestTableIndex';
+
     var easyDynamoDb = new EasyDynamoDB(JSON.parse(fs.readFileSync('test/integration/automation.config', 'utf8')));
 
     beforeEach(function () {
         console.log('Creating table ' + TABLE_NAME);
-        return easyDynamoDb.createTable({
-            AttributeDefinitions: [
-                {
-                    AttributeName: TABLE_HASH_KEY,
-                    AttributeType: EasyDynamoDB.AttributeTypes.STRING
-                },
-                {
-                    AttributeName: TABLE_RANGE_KEY,
-                    AttributeType: EasyDynamoDB.AttributeTypes.NUMBER
-                }
-            ],
-            KeySchema: [
-                {
-                    AttributeName: TABLE_HASH_KEY,
-                    KeyType: EasyDynamoDB.KeyTypes.HASH
-                },
-                {
-                    AttributeName: TABLE_RANGE_KEY,
-                    KeyType: EasyDynamoDB.KeyTypes.RANGE
-                }
-            ],
-            ProvisionedThroughput: {
-                ReadCapacityUnits: 1,
-                WriteCapacityUnits: 1
-            },
-            TableName: TABLE_NAME
-        })
-        .then(function () {
-            return easyDynamoDb.waitFor(TABLE_NAME, EasyDynamoDB.WaitForStates.TABLE_EXISTS);
-        });
+        return easyDynamoDb.waitFor(TABLE_NAME, EasyDynamoDB.WaitForStates.TABLE_NOT_EXISTS)
+            .then(function() {
+                return easyDynamoDb.createTable({
+                    AttributeDefinitions: [
+                        {
+                            AttributeName: TABLE_HASH_KEY,
+                            AttributeType: EasyDynamoDB.AttributeTypes.STRING
+                        },
+                        {
+                            AttributeName: TABLE_RANGE_KEY,
+                            AttributeType: EasyDynamoDB.AttributeTypes.NUMBER
+                        },
+                        {
+                            AttributeName: TABLE_FIELD_1,
+                            AttributeType: EasyDynamoDB.AttributeTypes.NUMBER
+                        },
+                        {
+                            AttributeName: TABLE_FIELD_2,
+                            AttributeType: EasyDynamoDB.AttributeTypes.NUMBER
+                        }
+                    ],
+                    KeySchema: [
+                        {
+                            AttributeName: TABLE_HASH_KEY,
+                            KeyType: EasyDynamoDB.KeyTypes.HASH
+                        },
+                        {
+                            AttributeName: TABLE_RANGE_KEY,
+                            KeyType: EasyDynamoDB.KeyTypes.RANGE
+                        }
+                    ],
+                    ProvisionedThroughput: {
+                        ReadCapacityUnits: 1,
+                        WriteCapacityUnits: 1
+                    },
+                    TableName: TABLE_NAME,
+                    GlobalSecondaryIndexes: [
+                        {
+                            IndexName: INDEX_NAME,
+                            KeySchema: [
+                                {
+                                    AttributeName: TABLE_FIELD_1,
+                                    KeyType: EasyDynamoDB.KeyTypes.HASH
+                                },
+                                {
+                                    AttributeName: TABLE_FIELD_2,
+                                    KeyType: EasyDynamoDB.KeyTypes.RANGE
+                                }
+                            ],
+                            Projection: {
+                                ProjectionType: EasyDynamoDB.ProjectionTypes.ALL
+                            },
+                            ProvisionedThroughput: {
+                                ReadCapacityUnits: 1,
+                                WriteCapacityUnits: 1
+                            }
+                        }
+                    ]
+                })
+            })
+            .then(function () {
+                return easyDynamoDb.waitFor(TABLE_NAME, EasyDynamoDB.WaitForStates.TABLE_EXISTS);
+            });
     });
 
     afterEach(function () {
@@ -101,5 +139,26 @@ describe('EasyDynamoDB', function() {
         .then(function (data) {
             console.log('Deleted item ' + JSON.stringify(data));
         });
+    });
+
+    it('should list tables', function () {
+        return easyDynamoDb.listTables()
+            .then(function (tables) {
+                console.log('Found ' + tables.length + ' table(s): ' + tables);
+            });
+    });
+
+    it('should change provisioned throughput', function () {
+        return easyDynamoDb.changeProvisionedThroughput(TABLE_NAME, 5, 6)
+            .then(function(data) {
+                console.log('Table updated: ' + JSON.stringify(data));
+            });
+    });
+
+    it('should create and delete a global secondary index', function () {
+        return easyDynamoDb.deleteGlobalSecondaryIndex(TABLE_NAME, INDEX_NAME)
+            .then(function () {
+                console.log('Deleted global secondary index');
+            });
     });
 });

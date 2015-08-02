@@ -68,7 +68,20 @@ easyDynamoDb.createTable(/* Parameters */, function (err, data) {
 This document uses promises in its examples, but remember that [you can use both promises and callbacks](#PromisesAndCallbacks) interchangeably. 
 ### <a id="Tables"></a> Tables
 
-#### createTable (parameters [,callback])
+#### changeProvisionedThroughput(_tableName_, _readThroughput_, _writeThroughput_ [,_callback_])
+
+Modifies the provisioned read/write throughput on a table.
+
+```javascript
+easyDynamoDb.changeProvisionedThroughput('myTableName', 5, 6)
+	.then(function() {
+		console.log('Table throughput updated');
+    });
+```
+
+__Returns__See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#updateTable-property) for information on return values.
+
+#### createTable (_parameters_ [,_callback_])
 Creates a table in DynamoDB. See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#createTable-property) for information on expected parameters and return values.
 
 ```javascript
@@ -78,7 +91,7 @@ easyDynamoDb.createTable(/* Parameters */)
 	});
 ```
 
-#### deleteTable (tableName [,callback])
+#### deleteTable (_tableName_ [,_callback_])
 Deletes a table from DynamoDB. 
 
 ```javascript
@@ -90,7 +103,20 @@ easyDynamoDb.deleteTable('myTableName')
 
 __Returns__: See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#deleteTable-property) for information on return values.
 
-#### describeTable (tableName [,callback])
+#### deleteGlobalSecondaryIndex (_tableName_, _indexName_ [,_callback_]
+
+Removes a global secondary index from a table.
+
+```javascript
+easyDynamoDb.deleteGlobalSecondaryIndex('myTableName', 'myIndexName')
+	.then(function () {
+		console.log('Deleted global secondary index');
+	});
+```
+
+__Returns__See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#updateTable-property) for information on return values.
+
+#### describeTable (_tableName_ [,_callback_])
 Describe a table in DynamoDB. 
 
 ```javascript
@@ -102,7 +128,7 @@ easyDynamoDb.describeTable('myTableName')
 
 __Returns:__ See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#deleteTable-property) for information on return values.
 
-#### listTables ([callback])
+#### listTables ([_callback_])
 List all tables in DynamoDB.
 
 ```javascript
@@ -112,7 +138,17 @@ easyDynamoDb.listTables()
 	});
 ```
 
-__Returns:__ An array of table names.
+#### waitFor(_tableName_, _state_ [,_callback_])
+
+Waits for a table to be in the given [state](#WaitForStates).
+
+```javascript
+easyDynamoDb.waitFor('myTableName', EasyDynamoDB.WaitForStates.TABLE_EXISTS)
+	.then(function() {
+		console.log('Table is ready!')
+	});
+```
+
 
 ### <a id="Items"></a> Items
 ### <a id="Constants"></a> Constants
@@ -183,7 +219,7 @@ easyDynamoDb.getItem(
 });
 ```
 
-##### WaitForStates
+##### <a id='WaitForStates'></a>WaitForStates
  - TABLE_EXISTS
  - TABLE_NOT_EXISTS
 
@@ -232,6 +268,7 @@ Features:
  - `PutItem`, `GetItem`, `UpdateItem` and `DeleteItem` no longer return AttributeValues as part of their main response element ("Attributes"/"Item"). They now get un-marshalled back to a regular JS object
  - `describeTable`, `waitFor` and `deleteTable` have been simplified to use a table name string rather than an object
  - `listTables` now simply returns an array of table names, instead of an object
+ - Split `updateTable` into more specific functions [__WIP__]
  - Adding some constants for AWS SDK strings
 
 Misc:
