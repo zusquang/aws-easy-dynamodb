@@ -39,17 +39,13 @@ describe('EasyDynamoDB', function() {
             TableName: TABLE_NAME
         })
         .then(function () {
-            return easyDynamoDb.waitFor(EasyDynamoDB.WaitForStates.TABLE_EXISTS, {
-                TableName: TABLE_NAME
-            });
+            return easyDynamoDb.waitFor(TABLE_NAME, EasyDynamoDB.WaitForStates.TABLE_EXISTS);
         });
     });
 
     afterEach(function () {
         console.log('Deleting table ' + TABLE_NAME);
-        return easyDynamoDb.deleteTable({
-            TableName: TABLE_NAME
-        });
+        return easyDynamoDb.deleteTable(TABLE_NAME);
     });
 
     it('should put, get, update and delete an item', function () {

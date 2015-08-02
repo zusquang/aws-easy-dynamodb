@@ -507,7 +507,7 @@ describe('EasyDynamoDB', function () {
                 } else {
                     throw new Error('Should have failed without a Key');
                 }
-            })
+            });
         });
 
         it('should marshal Key section to DynamoDB format', function () {
@@ -582,11 +582,11 @@ describe('EasyDynamoDB', function () {
         });
 
         it('should allow the use of promises', function () {
-            return easyDynamoDb.waitFor('state', {});
+            return easyDynamoDb.waitFor('tableName', EasyDynamoDB.WaitForStates.TABLE_NOT_EXISTS);
         });
 
         it('should allow the use of callbacks', function (done) {
-            easyDynamoDb.waitFor('state', {}, function () {
+            easyDynamoDb.waitFor('tableName', EasyDynamoDB.WaitForStates.TABLE_EXISTS, function () {
                 done();
             });
         });

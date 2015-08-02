@@ -12,11 +12,13 @@ For information on parameters that must be passed into the functions and constru
 4. [Useful Constants](#UsefulConstants)
   1. [Attribute Types](#EasyDynamoDB.AttributeTypes)
   2. [Key Types](#EasyDynamoDB.KeyTypes)
-  3. [Return Values](#EasyDynamoDB.ReturnValues)
-  4. [WaitFor States](#EasyDynamoDB.WaitForStates)
-5. [The Future](#TheFuture)
-6. [Integration Tests](#IntegrationTests)
-7. [Changelog](#Changelog)
+  3. [Table States](#EasyDynamoDB.TableStatuses)
+  4. [Return Values](#EasyDynamoDB.ReturnValues)
+  5. [WaitFor States](#EasyDynamoDB.WaitForStates)
+5. [API Reference](#APIReference)
+6. [The Future](#TheFuture)
+7. [Integration Tests](#IntegrationTests)
+8. [Changelog](#Changelog)
 
 ### <a id="GettingStarted"></a> Getting Started
 In order to use easy-dynamodb, you first need to add it as a dependency of your Node project
@@ -139,7 +141,12 @@ easyDynamoDb.createTable(
       // Other parameters...
 }
  ```
- 
+##### <a id="EasyDynamoDB.TableStatuses"></a> EasyDynamoDB.TableStatuses
+- ACTIVE
+- CREATING
+- UPDATING
+- DELETING
+
 ##### <a id="EasyDynamoDB.ReturnValues"></a> EasyDynamoDB.ReturnValues
  - NONE
  - ALL_OLD
@@ -173,7 +180,7 @@ It is still in its early phases, but here is at least part of my wish-list for e
 
 * Allow the user to use promises or callbacks seamlessly, depending on their situation [Done!]
 * Remove the need to specify AttributeValues or to marshal/unmarshal data being passed to and from DynamoDB
-* Transparently treat cases where multiple calls must be made to DynamoDB, such as with `deleteGetItem`'s max item count of 1000.
+* Transparently treat cases where multiple calls must be made to DynamoDB, such as with `deleteItem`'s max item count of 1000.
 * Replace "batch" functions and make the regular function smart enough to act appropriately
 * Provide constants for all AWS SDK strings
 
@@ -190,15 +197,16 @@ If for some reason you would like to run the easy-dynamodb integration tests, ch
 
 Then simply,
 ```sh
-cd test
+cd test/integration
 mocha
 ```
 
 ## <a id="Changelog"></a> Changelog
 ### 0.0.3 - Not Released Yet
 Features:
- - PutItem, GetItem, UpdateItem and DeleteItem no longer return AttributeValues as part of their main response element ("Attributes"/"Item"). They now get un-marshalled back to a regular JS object.
- - Adding constants for WaitForStates, AttributeTypes, KeyTypes and ReturnValues
+ - PutItem, GetItem, UpdateItem and DeleteItem no longer return AttributeValues as part of their main response element ("Attributes"/"Item"). They now get un-marshalled back to a regular JS object
+  - `describeTable`, `waitFor` and `deleteTable` have been simplified to use a table name string rather than an object
+ - Adding some constants for AWS SDK strings
 
 Misc:
  - PutItem, GetItem, UpdateItem and DeleteItem now throw Errors if you call them without the bare minimum Key or Item object as part of your params
