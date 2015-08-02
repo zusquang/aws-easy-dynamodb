@@ -2,25 +2,30 @@
 
 As its name implies, easy-dynamodb is a package meant to make working with DynamoDB easier and more productive - less time spent reading heavy API documentation, less lines of code, and less mistakes.
 
-Everything the [AWS DynamoDB SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html) can do, easy-dynamodb can do -- only (hopefully) more easily.
-For information on parameters that must be passed into the functions and constructor, please refer to the AWS API docs.
-
 # Table of Contents
-1. [Getting Started](#GettingStarted)
-2. [Promises And Callbacks](#PromisesAndCallbacks)
-3. [Simplified Key Objects](#SimplifiedKeyObjects)
-4. [Useful Constants](#UsefulConstants)
-  1. [Attribute Types](#EasyDynamoDB.AttributeTypes)
-  2. [Key Types](#EasyDynamoDB.KeyTypes)
-  3. [Table States](#EasyDynamoDB.TableStatuses)
-  4. [Return Values](#EasyDynamoDB.ReturnValues)
-  5. [WaitFor States](#EasyDynamoDB.WaitForStates)
-5. [API Reference](#APIReference)
-6. [The Future](#TheFuture)
-7. [Integration Tests](#IntegrationTests)
-8. [Changelog](#Changelog)
+1. [Features](#Features)
+2. [Getting Started](#GettingStarted)
+3. [Promises And Callbacks](#PromisesAndCallbacks)
+6. [API Reference](#APIReference)
+  1. [Tables](#Tables)
+  2. [Items](#Items)
+  3. [Constants](#Constants)
+7. [The Future](#TheFuture)
+8. [Integration Tests](#IntegrationTests)
+9. [Changelog](#Changelog)
 
-### <a id="GettingStarted"></a> Getting Started
+## <a id="Features"></a> Features
+Everything the AWS DynamoDB SDK can do, easy-dynamodb can do -- only more easily. Here are some of the key features the easy-dynamodb offers:
+
+ - Both promises and callbacks -- you get to choose
+ - Simplified API -- you should be spending much less time going through documentation to understand what needs to get passed into functions
+ - Constants for many of the strings the AWS SDK uses
+ - Simplified return values -- no more clunky conversions, just get your data
+ - Transparent treatment of cases where multiple calls to DynamoDB must be made (e.g. when `listTables` returns a large number of tables)
+
+For more information on the underlying SDK, please refer to the [AWS DynamoDB SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html) docs.
+
+## <a id="GettingStarted"></a> Getting Started
 In order to use easy-dynamodb, you first need to add it as a dependency of your Node project
 ```sh
 npm install --save easy-dynamodb
@@ -34,7 +39,7 @@ var easyDynamoDb = new EasyDynamoDB(/* Configuration */);
 easyDynamoDb.createTable(/* Parameters */);
 ```
 
-### <a id="PromisesAndCallbacks"></a> Promises _and_ Callbacks
+## <a id="PromisesAndCallbacks"></a> Promises _and_ Callbacks
 With easy-dynamodb, you can freely use promises or callbacks wherever makes the most sense to you. Every function supports both with no added effort on your part. Simply provide a callback if you would like to use one, otherwise the function will return a promise you can use to run your next instruction.
 
 If you like promises:
@@ -58,46 +63,62 @@ easyDynamoDb.createTable(/* Parameters */, function (err, data) {
 	}
 });
 ```
-### <a id="SimplifiedKeyObjects"></a>Simplified Key Objects
-When running operations on items in your database (e.g. `PutItem`, `GetItem`, etc.), the AWS SDK expects _AttributeValues_ to describe your keys:
-```javascript
-{
-	Item: {
-		/* String hash key */
-		'HashKeyName' : {
-			S: 'HashKeyValue'
-		},
-		
-		/* Numerical range key */
-		'RangeKeyName' : {
-			N: '5'
-		}
-	}
-	/* ... */
-}
-```
-This can lead to cumbersome and error-prone parameter objects. With easy-dynamodb, you just use regular objects for your keys:
+
+## <a id="APIReference"></a> API Reference
+This document uses promises in its examples, but remember that [you can use both promises and callbacks](#PromisesAndCallbacks) interchangeably. 
+### <a id="Tables"></a> Tables
+
+#### createTable (parameters [,callback])
+Creates a table in DynamoDB. See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#createTable-property) for information on expected parameters and return values.
 
 ```javascript
-{
-	Item: {
-		/* String hash key */
-		'HashKeyName' : 'HashKeyValue'
-		
-		/* Numerical range key */
-		'RangeKeyName' : 5
-	}
-	/* ... */
-}
+easyDynamoDb.createTable(/* Parameters */)
+	.then(function(data) {
+		console.log('Returned: ' + data);
+	});
 ```
-Similarly, the response back from DynamoDB will be automatically un-marshalled back to a regular Javascript object. 
 
-**Note:** This feature is currently only implemented for the main ("Item"/"Key") section of `PutItem`, `GetItem`, `DeleteItem` and `UpdateItem`.
+#### deleteTable (tableName [,callback])
+Deletes a table from DynamoDB. 
 
-### <a id="UsefulConstants"></a>Useful Constants
-Easy-dynamodb provides constants for many of the strings AWS SDK expects to help you maintain cleaner code and better programming habits.
+```javascript
+easyDynamoDb.deleteTable('myTableName')
+	.then(function(data) {
+		console.log('Returned: ' + data);
+	});
+```
 
-##### <a id="EasyDynamoDB.AttributeTypes"></a> EasyDynamoDB.AttributeTypes
+__Returns__: See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#deleteTable-property) for information on return values.
+
+#### describeTable (tableName [,callback])
+Describe a table in DynamoDB. 
+
+```javascript
+easyDynamoDb.describeTable('myTableName')
+	.then(function(data) {
+		console.log('Returned: ' + data);
+	});
+```
+
+__Returns:__ See [AWS docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#deleteTable-property) for information on return values.
+
+#### listTables ([callback])
+List all tables in DynamoDB.
+
+```javascript
+easyDynamoDb.listTables()
+	.then(function(data) {
+		console.log('Returned: ' + data);
+	});
+```
+
+__Returns:__ An array of table names.
+
+### <a id="Items"></a> Items
+### <a id="Constants"></a> Constants
+Easy-dynamodb provides constants for many of the strings the AWS SDK uses to help you maintain cleaner code and better programming habits.
+
+#### <a id="EasyDynamoDB.AttributeTypes"></a> AttributeTypes
  - STRING
  - NUMBER
  - BINARY
@@ -120,7 +141,7 @@ easyDynamoDb.createTable(
 }
 ```
 
-##### <a id="EasyDynamoDB.KeyTypes"></a> EasyDynamoDB.KeyTypes
+#### KeyTypes
  - HASH
  - RANGE
  
@@ -141,13 +162,13 @@ easyDynamoDb.createTable(
       // Other parameters...
 }
  ```
-##### <a id="EasyDynamoDB.TableStatuses"></a> EasyDynamoDB.TableStatuses
+#### TableStatuses
 - ACTIVE
 - CREATING
 - UPDATING
 - DELETING
 
-##### <a id="EasyDynamoDB.ReturnValues"></a> EasyDynamoDB.ReturnValues
+##### ReturnValues
  - NONE
  - ALL_OLD
  - UPDATED_OLD
@@ -162,7 +183,7 @@ easyDynamoDb.getItem(
 });
 ```
 
-##### <a id="EasyDynamoDB.WaitForStates"></a>  EasyDynamoDB.WaitForStates
+##### WaitForStates
  - TABLE_EXISTS
  - TABLE_NOT_EXISTS
 
@@ -175,7 +196,7 @@ easyDynamoDb.waitFor(
 );
 ```
 
-### <a id="TheFuture"></a>  The Future
+## <a id="TheFuture"></a> The Future
 It is still in its early phases, but here is at least part of my wish-list for easy-dynamodb.
 
 * Allow the user to use promises or callbacks seamlessly, depending on their situation [Done!]
@@ -184,7 +205,7 @@ It is still in its early phases, but here is at least part of my wish-list for e
 * Replace "batch" functions and make the regular function smart enough to act appropriately
 * Provide constants for all AWS SDK strings
 
-### <a id="IntegrationTests"></a> Integration Tests
+## <a id="IntegrationTests"></a> Integration Tests
 If for some reason you would like to run the easy-dynamodb integration tests, check out the project and run npm install to get all the required dependencies. Then, create a file called `automation.config` under the `test` folder containing the configuration parameters you would normally pass to the EasyDynamoDB object. A basic example would be:
 
 ```json
@@ -202,14 +223,21 @@ mocha
 ```
 
 ## <a id="Changelog"></a> Changelog
-### 0.0.3 - Not Released Yet
+### 0.1.0 - Not Released Yet
+
+How about we start versioning things correctly?
+
 Features:
- - PutItem, GetItem, UpdateItem and DeleteItem no longer return AttributeValues as part of their main response element ("Attributes"/"Item"). They now get un-marshalled back to a regular JS object
-  - `describeTable`, `waitFor` and `deleteTable` have been simplified to use a table name string rather than an object
+
+ - `PutItem`, `GetItem`, `UpdateItem` and `DeleteItem` no longer return AttributeValues as part of their main response element ("Attributes"/"Item"). They now get un-marshalled back to a regular JS object
+ - `describeTable`, `waitFor` and `deleteTable` have been simplified to use a table name string rather than an object
+ - `listTables` now simply returns an array of table names, instead of an object
  - Adding some constants for AWS SDK strings
 
 Misc:
+
  - PutItem, GetItem, UpdateItem and DeleteItem now throw Errors if you call them without the bare minimum Key or Item object as part of your params
+ - Major update to documentation. Hopefully not too heavy.
 
 ### 0.0.2 - July 25, 2015
 Features:

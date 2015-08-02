@@ -306,9 +306,10 @@ describe('EasyDynamoDB', function () {
     });
 
     describe('listTables', function () {
+        var listTablesStub;
 
         beforeEach(function () {
-            sinon.stub(awsDynamoDb, 'listTables', function (params, callback) {
+            listTablesStub = sinon.stub(awsDynamoDb, 'listTables', function (params, callback) {
                 callback(null, {}); // Just make it not an error
             });
         });
@@ -324,6 +325,21 @@ describe('EasyDynamoDB', function () {
         it('should allow the use of callbacks', function (done) {
             easyDynamoDb.listTables({}, function () {
                 done();
+            });
+        });
+
+        it('should only return an array of table names', function() {
+            // Override stub
+            listTablesStub.restore();
+            listTablesStub = sinon.stub(awsDynamoDb, 'listTables', function (params, callback) {
+                callback(null, {
+                    TableNames: ['FirstTable', 'SecondTable']
+                });
+            });
+
+            return easyDynamoDb.listTables()
+            .then(function(data) {
+                data.should.be.deep.equal(['FirstTable', 'SecondTable']);
             });
         });
     });
