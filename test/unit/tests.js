@@ -310,7 +310,7 @@ describe('EasyDynamoDB', function () {
 
         beforeEach(function () {
             listTablesStub = sinon.stub(awsDynamoDb, 'listTables', function (params, callback) {
-                callback(null, {}); // Just make it not an error
+                callback(null, {TablesNames:[]}); // Just make it not an error
             });
         });
 
@@ -319,11 +319,11 @@ describe('EasyDynamoDB', function () {
         });
 
         it('should allow the use of promises', function () {
-            return easyDynamoDb.listTables({});
+            return easyDynamoDb.listTables();
         });
 
         it('should allow the use of callbacks', function (done) {
-            easyDynamoDb.listTables({}, function () {
+            easyDynamoDb.listTables(function () {
                 done();
             });
         });
