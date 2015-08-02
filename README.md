@@ -6,13 +6,12 @@ As its name implies, easy-dynamodb is a package meant to make working with Dynam
 1. [Features](#Features)
 2. [Getting Started](#GettingStarted)
 3. [Promises And Callbacks](#PromisesAndCallbacks)
-6. [API Reference](#APIReference)
+4. [API Reference](#APIReference)
   1. [Tables](#Tables)
   2. [Items](#Items)
   3. [Constants](#Constants)
-7. [The Future](#TheFuture)
-8. [Integration Tests](#IntegrationTests)
-9. [Changelog](#Changelog)
+5. [Integration Tests](#IntegrationTests)
+6. [Changelog](#Changelog)
 
 ## <a id="Features"></a> Features
 Everything the AWS DynamoDB SDK can do, easy-dynamodb can do -- only more easily. Here are some of the key features that easy-dynamodb offers:
@@ -267,7 +266,7 @@ mocha
 ```
 
 ## <a id="Changelog"></a> Changelog
-### 0.0.3 - Not Released Yet
+### 0.0.3 - August 2, 2015
 
 Features:
 
