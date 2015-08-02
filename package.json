@@ -1,6 +1,6 @@
 {
   "name": "easy-dynamodb",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An easy-to-use wrapper around the AWS DynamoDB SDK",
   "main": "index.js",
   "scripts": {
