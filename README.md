@@ -15,7 +15,7 @@ As its name implies, easy-dynamodb is a package meant to make working with Dynam
 9. [Changelog](#Changelog)
 
 ## <a id="Features"></a> Features
-Everything the AWS DynamoDB SDK can do, easy-dynamodb can do -- only more easily. Here are some of the key features the easy-dynamodb offers:
+Everything the AWS DynamoDB SDK can do, easy-dynamodb can do -- only more easily. Here are some of the key features that easy-dynamodb offers:
 
  - Both promises and callbacks -- you get to choose
  - Simplified API -- you should be spending much less time going through documentation to understand what needs to get passed into functions
@@ -198,6 +198,23 @@ easyDynamoDb.createTable(
       // Other parameters...
 }
  ```
+
+#### ProjectionTypes
+ - ALL
+ - KEYS_ONLY
+ - INCLUDE
+ 
+```javascript
+easyDynamoDb.createTable({               
+	GlobalSecondaryIndexes: [{                   
+		Projection: {
+			ProjectionType: EasyDynamoDB.ProjectionTypes.ALL
+		}
+    }]
+    // Other parameters...
+});
+```
+
 #### TableStatuses
 - ACTIVE
 - CREATING
@@ -232,15 +249,6 @@ easyDynamoDb.waitFor(
 );
 ```
 
-## <a id="TheFuture"></a> The Future
-It is still in its early phases, but here is at least part of my wish-list for easy-dynamodb.
-
-* Allow the user to use promises or callbacks seamlessly, depending on their situation [Done!]
-* Remove the need to specify AttributeValues or to marshal/unmarshal data being passed to and from DynamoDB
-* Transparently treat cases where multiple calls must be made to DynamoDB, such as with `deleteItem`'s max item count of 1000.
-* Replace "batch" functions and make the regular function smart enough to act appropriately
-* Provide constants for all AWS SDK strings
-
 ## <a id="IntegrationTests"></a> Integration Tests
 If for some reason you would like to run the easy-dynamodb integration tests, check out the project and run npm install to get all the required dependencies. Then, create a file called `automation.config` under the `test` folder containing the configuration parameters you would normally pass to the EasyDynamoDB object. A basic example would be:
 
@@ -259,9 +267,7 @@ mocha
 ```
 
 ## <a id="Changelog"></a> Changelog
-### 0.1.0 - Not Released Yet
-
-How about we start versioning things correctly?
+### 0.0.3 - Not Released Yet
 
 Features:
 
@@ -273,7 +279,7 @@ Features:
 
 Misc:
 
- - PutItem, GetItem, UpdateItem and DeleteItem now throw Errors if you call them without the bare minimum Key or Item object as part of your params
+ - PutItem, GetItem, UpdateItem and DeleteItem now produce errors if you call them without the bare minimum Key or Item object as part of your params
  - Major update to documentation. Hopefully not too heavy.
 
 ### 0.0.2 - July 25, 2015
