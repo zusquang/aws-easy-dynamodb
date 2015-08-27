@@ -266,6 +266,12 @@ mocha
 ```
 
 ## <a id="Changelog"></a> Changelog
+### 0.0.4 - Not released yet
+
+Features:
+
+ - `listTables` now transparently makes multiple calls to DynamoDB until it retrieves all tables
+
 ### 0.0.3 - August 2, 2015
 
 Features:
