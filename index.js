@@ -1,5 +1,5 @@
 var constants = require('./lib/constants');
-var EasyDynamoDB = require('./lib/easyDynamoDB');
+var EasyDynamoDB = require('./lib/easyDynamoDb');
 
 EasyDynamoDB.AttributeTypes = constants.AttributeTypes;
 EasyDynamoDB.KeyTypes = constants.KeyTypes;
